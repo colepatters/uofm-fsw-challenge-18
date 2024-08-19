@@ -17,18 +17,35 @@ router.post("/", async function(req, res) {
 })
 
 router.get("/:thoughtId", async function(req, res) {
-    const thought = Thought.find({ _id: req.params.thoughtId })
+    try {
+        const thought = await Thought.findOne({ _id: req.params.thoughtId })
+        if (!thought) {
+            res.sendStatus(404)
+            return
+        }
+        res.status(200).send(thought)
+    } catch (error) {
+        res.status(500).send(error.message)
+    }
+})
+
+router.post("/:thoughtId/reactions", async function(req, res) {
+    console.log(req.body)
+    const thought = await Thought.findOne({ _id: req.params.thoughtId })
     if (!thought) {
         res.sendStatus(404)
         return
     }
 
-    res.json(thought)
-})
-
-router.post("/:thoughtId/reactions", async function(req, res) {
-    console.log(req.body)
-
+    try {
+        thought.reactions.push(req.body)
+        await thought.save()
+        res.sendStatus(200)
+        return
+    } catch (error) {
+        res.status(500).send(error.message)
+        return
+    }
 })
 
 export default router

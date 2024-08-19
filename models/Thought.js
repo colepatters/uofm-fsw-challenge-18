@@ -1,6 +1,27 @@
 import { model, Schema } from "mongoose";
 import User from "./User.js"
 
+const reactionSchema = new Schema(
+    {
+        reactionBody: {
+            type: String,
+            required: true,
+            validate: {
+                validator: (v) => v.length < 280
+            }
+        },
+        username: {
+            type: String,
+            required: true
+        },
+        createdAt: {
+            type: Date,
+            default: Date.now(),
+            get: (v) => v.toLocaleString()
+        }
+    }
+)
+
 const thoughtSchema = new Schema(
     {
         thoughtText: {
@@ -19,30 +40,7 @@ const thoughtSchema = new Schema(
             type: Schema.Types.ObjectId,
             ref: User,
         },
-        reactions: [
-            {
-                reactionId: {
-                    type: Schema.Types.ObjectId,
-                    default: new Schema.ObjectId()
-                },
-                reactionBody: {
-                    type: String,
-                    required: true,
-                    validate: {
-                        validator: (v) => v.length < 280
-                    }
-                },
-                username: {
-                    type: String,
-                    required: true
-                },
-                createdAt: {
-                    type: Date,
-                    default: Date.now(),
-                    get: (v) => v.toLocaleString()
-                }
-            }
-        ]
+        reactions: [reactionSchema]
     },
     {
 

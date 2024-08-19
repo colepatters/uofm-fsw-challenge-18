@@ -8,6 +8,19 @@ router.get("/", async function(req, res) {
     res.json(users)
 })
 
+router.get("/:userId", async function(req, res) {
+    const user = await User.findOne({ _id: req.params.userId })
+    if (!user) {
+        res.sendStatus(404)
+        return
+    }
+
+    await user.populate("thoughts", )
+    await user.populate("friends")
+
+    res.json(user)
+})
+
 router.post("/", async function(req, res) {
     try {
         const user = await User.create(req.body)
