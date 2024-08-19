@@ -1,6 +1,6 @@
 import { Router } from "express";
-import Thought from "../../models/Thought.js";
-import User from "../../models/User.js";
+import Thought from "../../../models/Thought.js";
+import User from "../../../models/User.js";
 
 const router = Router()
 
@@ -47,6 +47,11 @@ router.delete("/:thoughtId", async function(req, res) {
             res.sendStatus(404)
         }
     })
+})
+
+router.put("/:thoughtId", async function(req, res) {
+    await Thought.updateOne({ _id: req.params.thoughtId }, req.body)
+    res.sendStatus(200)
 })
 
 router.post("/:thoughtId/reactions", async function(req, res) {
