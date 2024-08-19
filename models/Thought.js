@@ -1,5 +1,4 @@
 import { model, Schema } from "mongoose";
-import User from "./User.js"
 
 const reactionSchema = new Schema(
     {
@@ -36,14 +35,11 @@ const thoughtSchema = new Schema(
             default: Date.now(),
             get: (v) => v.toLocaleString()
         },
-        user: {
-            type: Schema.Types.ObjectId,
-            ref: User,
+        username: {
+            type: String,
+            required: true
         },
         reactions: [reactionSchema]
-    },
-    {
-
     }
 )
 
