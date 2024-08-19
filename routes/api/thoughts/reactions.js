@@ -1,10 +1,10 @@
 import { Router } from "express";
-import Thought from "../../../models/Thought";
+import Thought from "../../../models/Thought.js";
 
 const router = Router()
 
-router.post("/:thoughtId/:reactionId", async function(req, res) {
-    const thought = await Thought.findOne({ _id: thoughtId })
+router.post("/:thoughtId/reactions", async function(req, res) {
+    const thought = await Thought.findOne({ _id: req.params.thoughtId })
     
     if (!thought) {
         res.sendStatus(404)
@@ -12,14 +12,15 @@ router.post("/:thoughtId/:reactionId", async function(req, res) {
     }
 
     thought.reactions.push(req.body)
+    await thought.save()
 
     res.sendStatus(200)
 })
 
-router.delete("/:thoughtId/:reactionId", async function(req, res) {
-    const thought = await Thought.findOne({ _id: thoughtId })
+router.delete("/:thoughtId/reactions/:reactionId", async function(req, res) {
+    const thought = await Thought.findOne({ _id: req.params.thoughtId })
     
-    if (!thought || !thought.reactions.some(el => el.reaction._id.toString() === req.params.reactionId)) {
+    if (!thought || !thought.reactions.some(el => el._id.toString() === req.params.reactionId)) {
         res.sendStatus(404)
         return
     }
